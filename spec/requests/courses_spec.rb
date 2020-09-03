@@ -75,10 +75,16 @@ RSpec.describe '/courses', type: :request do
         expect(response).to have_http_status(:created)
       end
 
-      it 'renders a JSON response with the new course' do
+      it 'renders a JSON response' do
         post courses_url,
              params: { course: valid_attributes }, headers: valid_headers, as: :json
         expect(response.content_type).to match(a_string_including('application/json'))
+      end
+
+      it 'returns the created course' do
+        post courses_url,
+             params: { course: valid_attributes }, headers: valid_headers, as: :json
+        expect(JSON.parse(response.body)).to have_key 'course'
       end
     end
 
@@ -106,15 +112,16 @@ RSpec.describe '/courses', type: :request do
 
   describe 'PATCH /update' do
     context 'with valid parameters' do
+      let!(:mock_new_title) { 'Updated title' }
+
       let(:new_attributes) do
-        skip('Add a hash of attributes valid for your model')
+        { title: mock_new_title }
       end
 
       it 'updates the requested course' do
-        mock_new_title = 'Updated Title'
-        course = Course.create! valid_attributes.merge({ title: mock_new_title })
+        course = Course.create! valid_attributes
         patch course_url(course),
-              params: { course: invalid_attributes }, headers: valid_headers, as: :json
+              params: { course: new_attributes }, headers: valid_headers, as: :json
         course.reload
         expect(course.title).to eq mock_new_title
       end
@@ -122,8 +129,15 @@ RSpec.describe '/courses', type: :request do
       it 'renders a JSON response with the course' do
         course = Course.create! valid_attributes
         patch course_url(course),
-              params: { course: invalid_attributes }, headers: valid_headers, as: :json
+              params: { course: new_attributes }, headers: valid_headers, as: :json
         expect(response.content_type).to start_with('application/json')
+      end
+
+      it 'returns the updated course' do
+        course = Course.create! valid_attributes
+        patch course_url(course),
+              params: { course: new_attributes }, headers: valid_headers, as: :json
+        expect(JSON.parse(response.body)).to have_key 'course'
       end
     end
 

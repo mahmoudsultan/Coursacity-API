@@ -24,7 +24,12 @@ class CoursesController < ApplicationController
 
   # GET /courses/1
   def show
-    render json: CourseBlueprint.render(@course, view: :normal)
+    response = {
+      success: true,
+      course: CourseBlueprint.render(@course, view: :normal)
+    }
+
+    render json: response
   end
 
   # POST /courses
@@ -32,18 +37,38 @@ class CoursesController < ApplicationController
     @course = Course.new(course_params)
     set_page_and_per
     if @course.save
-      render json: CourseBlueprint.render(@course, view: :normal), status: :created, location: @course
+      response = {
+        success: true,
+        course: CourseBlueprint.render(@course, view: :normal)
+      }
+
+      render json: response, status: :created, location: @course
     else
-      render json: @course.errors, status: :unprocessable_entity
+      error_response = {
+        success: false,
+        errors: @course.errors
+      }
+
+      render json: error_response, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /courses/1
   def update
     if @course.update(course_params)
-      render json: CourseBlueprint.render(@course, view: :normal)
+      response = {
+        success: true,
+        course: CourseBlueprint.render(@course, view: :normal)
+      }
+
+      render json: response
     else
-      render json: @course.errors, status: :unprocessable_entity
+      error_response = {
+        success: false,
+        errors: @course.errors
+      }
+
+      render json: error_response, status: :unprocessable_entity
     end
   end
 
