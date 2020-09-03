@@ -18,6 +18,15 @@ class CoursesController < ApplicationController
                                         })
   end
 
+  # GET /courses/popular
+  def popular
+    @courses = Course.limit(3)
+
+    render json: CourseBlueprint.render(@courses, view: :normal, root: :courses, meta: {
+                                          count: @courses.size
+                                        })
+  end
+
   # GET /courses/1
   def show
     render json: CourseBlueprint.render(@course, view: :normal, root: :course)

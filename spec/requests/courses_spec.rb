@@ -52,6 +52,20 @@ RSpec.describe '/courses', type: :request do
     end
   end
 
+  describe 'GET /popular' do
+    before do
+      FactoryBot.create_list(:course, 30, :valid)
+      get popular_courses_url, headers: valid_headers, as: :json
+    end
+
+    it 'returns the most 3 recent courses' do
+      returned_titles = JSON.parse(response.body)['courses'].map { |course| course['title'] }
+      expected_titles = Course.limit(3).map(&:title)
+
+      expect(returned_titles).to eql expected_titles
+    end
+  end
+
   describe 'GET /show' do
     it 'renders a successful response' do
       course = Course.create! valid_attributes
