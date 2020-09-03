@@ -35,7 +35,7 @@ class CoursesController < ApplicationController
   # POST /courses
   def create
     @course = Course.new(course_params)
-    set_page_and_per
+
     if @course.save
       response = {
         success: true,
@@ -92,6 +92,6 @@ class CoursesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def course_params
-    params.require(:course).permit(:title, :description, :slug)
+    params.require(:course).permit(:title, :description, :slug, :photo)
   end
 end
