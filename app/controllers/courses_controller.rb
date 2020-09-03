@@ -1,13 +1,25 @@
 # frozen_string_literal: true
 
+DEFAULT_COUNT_PER_PAGE = 10
+MAX_COUNT_PER_PAGE = 100
+
 class CoursesController < ApplicationController
   before_action :set_course, only: %i[show update destroy]
+  before_action :set_page_and_per, only: %i[index]
 
   # GET /courses
   def index
-    @courses = Course.all
+    @courses = Course.page(@page).per(@per)
 
-    render json: CourseBlueprint.render(@courses, view: :normal)
+    response = {
+      success: true,
+      courses: CourseBlueprint.render(@courses, view: :normal),
+      count: @courses.size,
+      total_count: @courses.total_count,
+      total_pages: @courses.total_pages,
+    }
+
+    render json: response
   end
 
   # GET /courses/1
@@ -18,7 +30,7 @@ class CoursesController < ApplicationController
   # POST /courses
   def create
     @course = Course.new(course_params)
-
+    set_page_and_per
     if @course.save
       render json: CourseBlueprint.render(@course, view: :normal), status: :created, location: @course
     else
@@ -45,6 +57,12 @@ class CoursesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_course
     @course = Course.find(params[:id])
+  end
+
+  def set_page_and_per
+    @page = params[:page] || 0
+    @per = params[:per] || DEFAULT_COUNT_PER_PAGE
+    @per = DEFAULT_COUNT_PER_PAGE if @per >= MAX_COUNT_PER_PAGE
   end
 
   # Only allow a trusted parameter "white list" through.

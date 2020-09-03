@@ -16,10 +16,39 @@ RSpec.describe '/courses', type: :request do
   end
 
   describe 'GET /index' do
-    it 'renders a successful response' do
-      Course.create! valid_attributes
+    before do
+      FactoryBot.create_list(:course, 30, :valid)
       get courses_url, headers: valid_headers, as: :json
+    end
+
+    it 'renders a successful response' do
       expect(response).to be_successful
+    end
+
+    it 'returns a list of courses in the correct key' do
+      response_data = JSON.parse(response.body)
+      expect(response_data).to have_key 'courses'
+    end
+
+    it 'returns courses list of correct length' do
+      response_data = JSON.parse(response.body)
+      expect(JSON.parse(response_data['courses']).length).to eql 10
+    end
+
+    it 'returns total_count in response' do
+      response_data = JSON.parse(response.body)
+      expect(response_data['total_count']).to eql Course.count
+    end
+
+    it 'returns total_pages in response' do
+      total_pages = (Course.count / 10).ceil
+      response_data = JSON.parse(response.body)
+      expect(response_data['total_pages']).to eql total_pages
+    end
+
+    it 'returns count in page' do
+      response_data = JSON.parse(response.body)
+      expect(response_data['count']).to eql 10
     end
   end
 
