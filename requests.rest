@@ -1,0 +1,3 @@
+@baseUri= http://localhost:3000
+
+GET {{baseUri}}/courses

@@ -32,23 +32,23 @@ RSpec.describe '/courses', type: :request do
 
     it 'returns courses list of correct length' do
       response_data = JSON.parse(response.body)
-      expect(JSON.parse(response_data['courses']).length).to eql 10
+      expect(response_data['courses'].length).to be 10
     end
 
     it 'returns total_count in response' do
       response_data = JSON.parse(response.body)
-      expect(response_data['total_count']).to eql Course.count
+      expect(response_data['meta']['total_count']).to eql Course.count
     end
 
     it 'returns total_pages in response' do
       total_pages = (Course.count / 10).ceil
       response_data = JSON.parse(response.body)
-      expect(response_data['total_pages']).to eql total_pages
+      expect(response_data['meta']['total_pages']).to eql total_pages
     end
 
     it 'returns count in page' do
       response_data = JSON.parse(response.body)
-      expect(response_data['count']).to eql 10
+      expect(response_data['meta']['count']).to be 10
     end
   end
 

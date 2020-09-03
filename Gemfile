@@ -45,6 +45,7 @@ group :development, :test do
 
   # Use to generate stubbed objects in tests.
   gem 'factory_bot_rails'
+  gem 'faker'
 
   # Use to test models.
   gem 'shoulda-matchers', '~> 3.1'

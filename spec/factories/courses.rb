@@ -9,9 +9,9 @@ FactoryBot.define do
     end
 
     trait :invalid do
-      title {''}
-      description {''}
-      slug {''}
+      title { '' }
+      description { '' }
+      slug { '' }
     end
   end
 end

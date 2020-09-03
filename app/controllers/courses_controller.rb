@@ -11,25 +11,16 @@ class CoursesController < ApplicationController
   def index
     @courses = Course.page(@page).per(@per)
 
-    response = {
-      success: true,
-      courses: CourseBlueprint.render(@courses, view: :normal),
-      count: @courses.size,
-      total_count: @courses.total_count,
-      total_pages: @courses.total_pages,
-    }
-
-    render json: response
+    render json: CourseBlueprint.render(@courses, view: :normal, root: :courses, meta: {
+                                          count: @courses.size,
+                                          total_count: @courses.total_count,
+                                          total_pages: @courses.total_pages
+                                        })
   end
 
   # GET /courses/1
   def show
-    response = {
-      success: true,
-      course: CourseBlueprint.render(@course, view: :normal)
-    }
-
-    render json: response
+    render json: CourseBlueprint.render(@course, view: :normal, root: :course)
   end
 
   # POST /courses
@@ -37,38 +28,18 @@ class CoursesController < ApplicationController
     @course = Course.new(course_params)
 
     if @course.save
-      response = {
-        success: true,
-        course: CourseBlueprint.render(@course, view: :normal)
-      }
-
-      render json: response, status: :created, location: @course
+      render json: CourseBlueprint.render(@course, view: :normal, root: :course), status: :created, location: @course
     else
-      error_response = {
-        success: false,
-        errors: @course.errors
-      }
-
-      render json: error_response, status: :unprocessable_entity
+      render json: { errors: @course.errors }, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /courses/1
   def update
     if @course.update(course_params)
-      response = {
-        success: true,
-        course: CourseBlueprint.render(@course, view: :normal)
-      }
-
-      render json: response
+      render json: CourseBlueprint.render(@course, view: :normal, root: :course)
     else
-      error_response = {
-        success: false,
-        errors: @course.errors
-      }
-
-      render json: error_response, status: :unprocessable_entity
+      render json: { errors: @course.errors }, status: :unprocessable_entity
     end
   end
 
