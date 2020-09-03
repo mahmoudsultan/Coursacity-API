@@ -7,12 +7,12 @@ class CoursesController < ApplicationController
   def index
     @courses = Course.all
 
-    render json: @courses
+    render json: CourseBlueprint.render(@courses, view: :normal)
   end
 
   # GET /courses/1
   def show
-    render json: @course
+    render json: CourseBlueprint.render(@course, view: :normal)
   end
 
   # POST /courses
@@ -20,7 +20,7 @@ class CoursesController < ApplicationController
     @course = Course.new(course_params)
 
     if @course.save
-      render json: @course, status: :created, location: @course
+      render json: CourseBlueprint.render(@course, view: :normal), status: :created, location: @course
     else
       render json: @course.errors, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class CoursesController < ApplicationController
   # PATCH/PUT /courses/1
   def update
     if @course.update(course_params)
-      render json: @course
+      render json: CourseBlueprint.render(@course, view: :normal)
     else
       render json: @course.errors, status: :unprocessable_entity
     end
