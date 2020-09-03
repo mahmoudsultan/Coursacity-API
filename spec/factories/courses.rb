@@ -2,8 +2,16 @@
 
 FactoryBot.define do
   factory :course do
-    title { 'MyString' }
-    description { 'MyString' }
-    slug { 'MyString' }
+    trait :valid do
+      title { 'Course Title' }
+      description { 'Course Description' }
+      slug { 'slug-123' }
+    end
+
+    trait :invalid do
+      title {''}
+      description {''}
+      slug {''}
+    end
   end
 end
