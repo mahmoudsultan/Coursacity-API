@@ -11,5 +11,6 @@ RSpec.describe Course, type: :model do
 
     it { is_expected.to validate_presence_of :slug }
     it { is_expected.to validate_length_of(:slug).is_at_least(3).is_at_most(100) }
+    it { should validate_uniqueness_of(:slug).case_insensitive }
   end
 end

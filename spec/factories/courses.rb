@@ -5,7 +5,7 @@ FactoryBot.define do
     trait :valid do
       title { 'Course Title' }
       description { 'Course Description' }
-      slug { 'slug-123' }
+      sequence(:slug) { |n| "slug-#{n}" }
     end
 
     trait :invalid do

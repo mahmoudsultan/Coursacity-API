@@ -79,25 +79,25 @@ RSpec.describe '/courses', type: :request do
       it 'creates a new Course' do
         expect do
           post courses_url,
-               params: { course: valid_attributes }, headers: valid_headers, as: :json
+               params: valid_attributes, headers: valid_headers, as: :json
         end.to change(Course, :count).by(1)
       end
 
       it 'returns a created status' do
         post courses_url,
-             params: { course: valid_attributes }, headers: valid_headers, as: :json
+             params: valid_attributes, headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
       end
 
       it 'renders a JSON response' do
         post courses_url,
-             params: { course: valid_attributes }, headers: valid_headers, as: :json
+             params: valid_attributes, headers: valid_headers, as: :json
         expect(response.content_type).to match(a_string_including('application/json'))
       end
 
       it 'returns the created course' do
         post courses_url,
-             params: { course: valid_attributes }, headers: valid_headers, as: :json
+             params: valid_attributes, headers: valid_headers, as: :json
         expect(JSON.parse(response.body)).to have_key 'course'
       end
     end
@@ -106,19 +106,19 @@ RSpec.describe '/courses', type: :request do
       it 'does not create a new Course' do
         expect do
           post courses_url,
-               params: { course: invalid_attributes }, as: :json
+               params: invalid_attributes, as: :json
         end.to change(Course, :count).by(0)
       end
 
       it 'returns 422 status' do
         post courses_url,
-             params: { course: invalid_attributes }, headers: valid_headers, as: :json
+             params: invalid_attributes, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it 'renders a JSON response with errors for the new course' do
         post courses_url,
-             params: { course: invalid_attributes }, headers: valid_headers, as: :json
+             params: invalid_attributes, headers: valid_headers, as: :json
         expect(response.content_type).to start_with('application/json')
       end
     end
@@ -135,7 +135,7 @@ RSpec.describe '/courses', type: :request do
       it 'updates the requested course' do
         course = Course.create! valid_attributes
         patch course_url(course),
-              params: { course: new_attributes }, headers: valid_headers, as: :json
+              params: new_attributes, headers: valid_headers, as: :json
         course.reload
         expect(course.title).to eq mock_new_title
       end
@@ -143,14 +143,14 @@ RSpec.describe '/courses', type: :request do
       it 'renders a JSON response with the course' do
         course = Course.create! valid_attributes
         patch course_url(course),
-              params: { course: new_attributes }, headers: valid_headers, as: :json
+              params: new_attributes, headers: valid_headers, as: :json
         expect(response.content_type).to start_with('application/json')
       end
 
       it 'returns the updated course' do
         course = Course.create! valid_attributes
         patch course_url(course),
-              params: { course: new_attributes }, headers: valid_headers, as: :json
+              params: new_attributes, headers: valid_headers, as: :json
         expect(JSON.parse(response.body)).to have_key 'course'
       end
     end
@@ -159,7 +159,7 @@ RSpec.describe '/courses', type: :request do
       it 'returns a 422 status' do
         course = Course.create! valid_attributes
         patch course_url(course),
-              params: { course: invalid_attributes }, headers: valid_headers, as: :json
+              params: invalid_attributes, headers: valid_headers, as: :json
 
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -167,7 +167,7 @@ RSpec.describe '/courses', type: :request do
       it 'renders a JSON response with errors for the course' do
         course = Course.create! valid_attributes
         patch course_url(course),
-              params: { course: invalid_attributes }, headers: valid_headers, as: :json
+              params: invalid_attributes, headers: valid_headers, as: :json
         expect(response.content_type).to start_with('application/json')
       end
     end
