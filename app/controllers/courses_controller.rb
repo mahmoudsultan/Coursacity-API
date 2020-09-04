@@ -81,7 +81,7 @@ class CoursesController < ApplicationController
   def set_page_and_per
     @page = (params[:page] || 0).to_i
     @per = (params[:per] || DEFAULT_COUNT_PER_PAGE).to_i
-    @per = DEFAULT_COUNT_PER_PAGE if (@per >= MAX_COUNT_PER_PAGE) || (@per < DEFAULT_COUNT_PER_PAGE)
+    @per = DEFAULT_COUNT_PER_PAGE if (@per >= MAX_COUNT_PER_PAGE) || (@per < 1)
   end
 
   # Only allow a trusted parameter "white list" through.
