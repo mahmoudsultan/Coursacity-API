@@ -9,7 +9,7 @@ class CoursesController < ApplicationController
 
   # GET /courses
   def index
-    @courses = Course.page(@page).per(@per)
+    @courses = Course.with_attached_photo.page(@page).per(@per)
 
     render json: CourseBlueprint.render(@courses, view: :normal, root: :courses, meta: {
                                           count: @courses.size,
@@ -20,7 +20,7 @@ class CoursesController < ApplicationController
 
   # GET /courses/popular
   def popular
-    @courses = Course.limit(3)
+    @courses = Course.with_attached_photo.limit(3)
 
     render json: CourseBlueprint.render(@courses, view: :normal, root: :courses, meta: {
                                           count: @courses.size
@@ -32,7 +32,7 @@ class CoursesController < ApplicationController
     search_query = params[:q]
     results = Course.empty_page
 
-    results = Course.search(search_query).page(@page).per(@per) unless search_query.nil? || search_query.blank?
+    results = Course.with_attached_photo.search(search_query).page(@page).per(@per) unless search_query.nil? || search_query.blank?
 
     render json: CourseBlueprint.render(results, view: :normal, root: :courses, meta: {
                                           count: results.size,
