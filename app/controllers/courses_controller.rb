@@ -5,7 +5,7 @@ MAX_COUNT_PER_PAGE = 100
 
 class CoursesController < ApplicationController
   before_action :set_course, only: %i[show update destroy]
-  before_action :set_page_and_per, only: %i[index]
+  before_action :set_page_and_per, only: %i[index search]
 
   # GET /courses
   def index
@@ -24,6 +24,20 @@ class CoursesController < ApplicationController
 
     render json: CourseBlueprint.render(@courses, view: :normal, root: :courses, meta: {
                                           count: @courses.size
+                                        })
+  end
+
+  # GET /courses/search
+  def search
+    search_query = params[:q]
+    results = Course.empty_page
+
+    results = Course.search(search_query).page(@page).per(@per) unless search_query.nil? || search_query.blank?
+
+    render json: CourseBlueprint.render(results, view: :normal, root: :courses, meta: {
+                                          count: results.size,
+                                          total_count: results.total_count,
+                                          total_pages: results.total_pages
                                         })
   end
 
@@ -67,7 +81,7 @@ class CoursesController < ApplicationController
   def set_page_and_per
     @page = (params[:page] || 0).to_i
     @per = (params[:per] || DEFAULT_COUNT_PER_PAGE).to_i
-    @per = DEFAULT_COUNT_PER_PAGE if @per >= MAX_COUNT_PER_PAGE or @per < DEFAULT_COUNT_PER_PAGE
+    @per = DEFAULT_COUNT_PER_PAGE if (@per >= MAX_COUNT_PER_PAGE) || (@per < DEFAULT_COUNT_PER_PAGE)
   end
 
   # Only allow a trusted parameter "white list" through.

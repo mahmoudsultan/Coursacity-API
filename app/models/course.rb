@@ -8,4 +8,10 @@ class Course < ApplicationRecord
   validates :title, presence: true, length: { in: 3..100 }
   validates :description, presence: true
   validates :slug, presence: true, length: { in: 3..100 }, uniqueness: { case_sensitive: false }
+
+  class << self
+    def search(query)
+      where('lower(title) LIKE :query', query: "%#{sanitize_sql_like(query.downcase)}%")
+    end
+  end
 end

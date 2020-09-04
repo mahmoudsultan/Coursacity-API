@@ -66,6 +66,68 @@ RSpec.describe '/courses', type: :request do
     end
   end
 
+  describe 'GET /search' do
+    context 'when there are search results' do
+      before do
+        FactoryBot.create_list(:course, 30, :valid, title: 'Learn X')
+        get search_courses_url, params: { q: 'learn' }
+      end
+
+      it 'renders a successful response' do
+        expect(response).to be_successful
+      end
+
+      it 'returns a list of courses in the correct key' do
+        response_data = JSON.parse(response.body)
+        expect(response_data).to have_key 'courses'
+      end
+
+      it 'returns courses list of correct length' do
+        response_data = JSON.parse(response.body)
+        expect(response_data['courses'].length).to be 10
+      end
+
+      it 'returns total_count in response' do
+        response_data = JSON.parse(response.body)
+        expect(response_data['meta']['total_count']).to eql Course.search('learn').count
+      end
+
+      it 'returns total_pages in response' do
+        total_pages = (Course.search('learn').count / 10).ceil
+        response_data = JSON.parse(response.body)
+        expect(response_data['meta']['total_pages']).to eql total_pages
+      end
+
+      it 'returns count in page' do
+        response_data = JSON.parse(response.body)
+        expect(response_data['meta']['count']).to be 10
+      end
+    end
+
+    context 'when there are no search results' do
+      before do
+        allow(Course).to receive(:search).and_return Course.none
+        get search_courses_url, params: { q: 'learn' }
+      end
+
+      it 'returns an empty list' do
+        response_data = JSON.parse(response.body)
+        expect(response_data['courses'].length).to be 0
+      end
+    end
+
+    context 'when the search query is blank' do
+      before do
+        get search_courses_url, params: { q: '' }
+      end
+
+      it 'returns an empty list' do
+        response_data = JSON.parse(response.body)
+        expect(response_data['courses'].length).to be 0
+      end
+    end
+  end
+
   describe 'GET /show' do
     it 'renders a successful response' do
       course = Course.create! valid_attributes
