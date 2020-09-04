@@ -252,3 +252,4 @@ curl -X DELETE http://localhost:3000/courses/11
 
 ## TODOs
 -[ ] Allow passing photo as Base64 encoded image in application/json requests.
+-[ ] Create and return multiple course image variants instead of only two (thumbnail and originl).
