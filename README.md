@@ -9,12 +9,14 @@ View instructions on how to install Ruby 2.7.1 and Ruby on Rails 6 on your OS.
 
 For Ubuntu this may be helpful https://gorails.com/setup/ubuntu/20.04
 
+### ImageMagick
+
+Rails depends on ImageMagick for courses photo variant processing.
+
 ### Gems
 ```
 bundle install
 ```
-
-### TODO: Ruby Magik
 
 ## Development
 ```
