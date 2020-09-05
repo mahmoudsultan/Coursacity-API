@@ -12,7 +12,7 @@ class Course < ApplicationRecord
   validates :slug, presence: true, length: { in: 3..100 }, uniqueness: { case_sensitive: false }
 
   def preprocess_photo_variant
-    self.photo.variant(resize: "320x240").processed
+    self.photo.variant(resize: "320x240").processed if self.photo.attached?
   end
 
   class << self

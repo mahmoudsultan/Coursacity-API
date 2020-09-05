@@ -1,6 +1,6 @@
 FROM ruby:2.7.1
 ENV BUNDLER_VERSION=2.1.4
-RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client default-libmysqlclient-dev imagemagick
+RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client default-libmysqlclient-dev imagemagick netcat
 
 # throw errors if Gemfile has been modified since Gemfile.lock
 RUN bundle config --global frozen 1

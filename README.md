@@ -1,6 +1,6 @@
 # Coursacity API
 
-RESTful Ruby on Rails API for Courses CRUD operations with Search feature.
+RESTful Ruby on Rails API for Courses CRUD operations with Search feature and Course thumbnail preprocessing.
 
 ## Installing Dependencies
 

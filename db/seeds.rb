@@ -8,5 +8,6 @@ require 'faker'
 
   course = Course.create! title: title, description: description, slug: slug
   course.photo.attach(io: File.open(Rails.root.join('public', 'default_course_image.jpg')), filename: "#{programing_language_name}.jpg")
+  course.preprocess_photo_variant
 end
 
